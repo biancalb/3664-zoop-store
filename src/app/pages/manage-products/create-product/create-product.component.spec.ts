@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -14,6 +14,17 @@ import { Observable, of } from 'rxjs';
 import { CreateProductComponent } from './create-product.component';
 import { CreateProductApiService } from './services/create-product-api.service';
 import { CreateProductService } from './services/create-product.service';
+import { Product } from '../../../types/product.inteface';
+import { BASE64_IMAGE } from '../../../shared/mocks/base64-image.mock';
+
+const productMock: Product = {
+  id: 1,
+  title: 'Produto',
+  description: 'Descrição',
+  category: 'Categoria',
+  price: 10,
+  image: BASE64_IMAGE
+}
 
 class MockCreateProductApiService {
   getAllCategories(): Observable<string[]> {
@@ -21,7 +32,7 @@ class MockCreateProductApiService {
   }
 }
 
-fdescribe('CreateProductComponent', () => {
+describe('CreateProductComponent', () => {
   let component: CreateProductComponent;
   let fixture: ComponentFixture<CreateProductComponent>;
   let createProductService: CreateProductService;
@@ -50,7 +61,7 @@ fdescribe('CreateProductComponent', () => {
         CreateProductService,
         CreateProductApiService,
         { provide: MatDialogRef, useValue: dialogRefMock },
-        { provide: MAT_DIALOG_DATA, useValue: {} }
+        { provide: MAT_DIALOG_DATA, useValue: productMock }
       ]
     })
     .compileComponents();
@@ -83,4 +94,34 @@ fdescribe('CreateProductComponent', () => {
       expect(categories).toEqual(expectedCategories);
     });
   });
+
+  it('deve definir os valores do formulário se os dados forem fornecidos', () => {
+    expect(component.formGroup.get('id')?.value).toEqual(productMock.id);
+    expect(component.formGroup.get('title')?.value).toEqual(productMock.title);
+    expect(component.formGroup.get('description')?.value).toEqual(productMock.description);
+    expect(component.formGroup.get('category')?.value).toEqual(productMock.category);
+    expect(component.formGroup.get('price')?.value).toEqual(productMock.price);
+  });
+
+  it('deve chamar o método close do dialogRef ao clicar no botão de cancelar', () => {
+    component.onCancelClick();
+    expect(dialogRefMock.close).toHaveBeenCalled();
+  });
+
+  it('deve chamar o método save do createProductService ao enviar o formulário', fakeAsync(() => {
+    spyOn(createProductService, 'save').and.returnValue(Promise.resolve());
+
+    const evento = {
+      target: {
+        files: [new File([''], 'imagem.jpeg', { type: 'image/jpeg' })]
+      }
+    };
+    component.onImageSelected(evento);
+
+    component.onSubmitForm();
+
+    fixture.whenStable().then(() => {
+      expect(createProductService.save).toHaveBeenCalled();
+    });
+  }));
 });
