@@ -15,12 +15,12 @@ export class ProductsService {
     private storageService: StorageService,
     private productsApiService: ProductsApiService
   ) {
-    this.products.update(products => [...products, ...this.storageService.getAll() as Product[]])
+    this.products.update(products => [...products, ...this.storageService.getAll() as Product[]]);
   }
 
   find(text: string): void {
     this.products.update(
-      oldProducts => oldProducts.filter(
+      oldProducts => oldProducts.flat().filter(
         (product: Product) => product.title.toLowerCase().includes(text.toLowerCase()))
     );
   }
@@ -35,7 +35,7 @@ export class ProductsService {
     this.productsApiService.getAllProducts(this.currentItemPerPage)
       .subscribe((products) => this.products.update(oldProducts => {
         return [
-          ...oldProducts,
+          ...oldProducts.flat(),
           ...products.filter((p: Product) => p.id !== oldProducts.find((oldProduct: Product) => oldProduct.id === p.id)?.id),
         ]
       }))
