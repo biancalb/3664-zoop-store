@@ -76,4 +76,11 @@ fdescribe('CreateProductComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('deve carregar as categorias corretamente', () => {
+    const expectedCategories = ['electronics', `men's clothing`, 'jewelery'];
+    component.categories$.subscribe(categories => {
+      expect(categories).toEqual(expectedCategories);
+    });
+  });
 });
