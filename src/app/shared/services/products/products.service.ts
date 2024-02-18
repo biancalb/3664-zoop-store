@@ -15,7 +15,7 @@ export class ProductsService {
     private storageService: StorageService,
     private productsApiService: ProductsApiService
   ) {
-    this.products.update(products => [...products, ...this.storageService.getAll() as Product[]])
+    this.products.update(products => [...products, ...this.storageService.getAll() as Product[]]);
   }
 
   find(text: string): void {
