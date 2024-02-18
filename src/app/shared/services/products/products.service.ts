@@ -35,7 +35,7 @@ export class ProductsService {
     this.productsApiService.getAllProducts(this.currentItemPerPage)
       .subscribe((products) => this.products.update(oldProducts => {
         return [
-          ...oldProducts,
+          ...oldProducts.flat(),
           ...products.filter((p: Product) => p.id !== oldProducts.find((oldProduct: Product) => oldProduct.id === p.id)?.id),
         ]
       }))
