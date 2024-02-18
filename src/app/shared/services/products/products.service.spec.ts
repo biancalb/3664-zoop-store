@@ -69,4 +69,48 @@ describe('ProductsService', () => {
       expect(products.length).toBe(2);
     });
   });
+
+  describe('find', () => {
+    it('deve filtrar os produtos pelo título', () => {
+      service.find('C');
+
+      const products = service.products().flat();
+
+      expect(products.length).toBe(1);
+      expect(products[0].title).toBe('Produto C');
+    });
+  });
+
+  describe('fetchAllProductsCreated', () => {
+    it('deve retornar todos os produtos', () => {
+      const produtos: Product[] = [
+        { id: 5, title: 'Produto F', category: 'eletronic', description: 'Product F', price: 500, image: 'image.png' },
+      ];
+
+      storageServiceMock.setValue('products', produtos);
+      const productsCreated = service.fetchAllProductsCreated()().flat()
+
+      expect(productsCreated).toEqual(produtos);
+    });
+  });
+
+  describe('fetchAllProducts', () => {
+    it('deve buscar os produtos da API e os que estão no Sesstion Storage', () => {
+      service.fetchAllProducts(10);
+
+      expect(service.products().length).toBe(4);
+    });
+  });
+
+  describe('delete', () => {
+    it('deve remover o produto do armazenamento', () => {
+      spyOn(storageServiceMock, 'remove');
+      const initialProductsLength = storageServiceMock.getAll().length;
+
+      service.delete(productStorage[0]);
+
+      expect(storageServiceMock.remove).toHaveBeenCalledTimes(1);
+      expect(storageServiceMock.getAll().length).toBeLessThanOrEqual(initialProductsLength);
+    });
+  });
 });
