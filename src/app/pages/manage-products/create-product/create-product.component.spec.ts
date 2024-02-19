@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture, TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -11,11 +11,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
 
+import { BASE64_IMAGE } from '../../../shared/mocks/base64-image.mock';
+import { Product } from '../../../types/product.inteface';
 import { CreateProductComponent } from './create-product.component';
 import { CreateProductApiService } from './services/create-product-api.service';
 import { CreateProductService } from './services/create-product.service';
-import { Product } from '../../../types/product.inteface';
-import { BASE64_IMAGE } from '../../../shared/mocks/base64-image.mock';
 
 const productMock: Product = {
   id: 1,
@@ -32,7 +32,7 @@ class MockCreateProductApiService {
   }
 }
 
-describe('CreateProductComponent', () => {
+fdescribe('CreateProductComponent', () => {
   let component: CreateProductComponent;
   let fixture: ComponentFixture<CreateProductComponent>;
   let createProductService: CreateProductService;
@@ -41,7 +41,6 @@ describe('CreateProductComponent', () => {
   const dialogRefMock = {
     close: jasmine.createSpy('close')
   };
-
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -108,7 +107,7 @@ describe('CreateProductComponent', () => {
     expect(dialogRefMock.close).toHaveBeenCalled();
   });
 
-  it('deve chamar o método save do createProductService ao enviar o formulário', fakeAsync(() => {
+  it('deve chamar o método save do createProductService ao enviar o formulário', () => {
     spyOn(createProductService, 'save').and.returnValue(Promise.resolve());
 
     const evento = {
@@ -120,8 +119,10 @@ describe('CreateProductComponent', () => {
 
     component.onSubmitForm();
 
+    fixture.detectChanges();
+
     fixture.whenStable().then(() => {
       expect(createProductService.save).toHaveBeenCalled();
     });
-  }));
+  });
 });
