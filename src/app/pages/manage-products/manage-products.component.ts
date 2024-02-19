@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { ProductsService } from '../../shared/services/products/products.service';
 import { Product } from '../../types/product.inteface';
@@ -12,6 +12,7 @@ import { CreateProductComponent } from './create-product/create-product.componen
 })
 export class ManageProductsComponent {
 
+  dialogRef!: MatDialogRef<CreateProductComponent>;
   products = this.productsService.fetchAllProductsCreated();
 
   constructor(
@@ -20,11 +21,11 @@ export class ManageProductsComponent {
   ) {}
 
   onSubscribeProduct(): void {
-    const dialogRef = this.dialog.open(CreateProductComponent);
+    this.dialogRef = this.dialog.open(CreateProductComponent);
 
-    dialogRef.afterClosed().subscribe(result =>
-      this.products.update(this.productsService.fetchAllProductsCreated())
-    );
+    this.dialogRef.afterClosed().subscribe(result => {
+      this.products.update(this.productsService.fetchAllProductsCreated());
+    });
   }
 
   onDelete(product: Product | null): void {
@@ -40,7 +41,7 @@ export class ManageProductsComponent {
     if (!text) {
       this.products.update(this.productsService.fetchAllProductsCreated());
       return;
-    }
+  }
 
     this.products.update(oldProducts =>
       oldProducts.filter(
@@ -49,9 +50,9 @@ export class ManageProductsComponent {
   }
 
   onEdit(product: Product | null): void {
-    const dialogRef = this.dialog.open(CreateProductComponent, {data: product});
+    this.dialogRef = this.dialog.open(CreateProductComponent, {data: product});
 
-    dialogRef.afterClosed().subscribe(result =>
+    this.dialogRef.afterClosed().subscribe(result =>
       this.products.update(this.productsService.fetchAllProductsCreated())
     );
   }
