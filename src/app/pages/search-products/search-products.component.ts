@@ -1,14 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { BannerComponent } from '../../shared/components/banner/banner.component';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { SearchComponent } from '../../shared/components/search/search.component';
-import { Product } from '../../types/product.inteface';
-import { ProductsService } from '../../shared/services/products/products.service';
 import { ProductsApiService } from '../../shared/services/products/products-api.service';
+import { ProductsService } from '../../shared/services/products/products.service';
 
 
 const MODULES = [
