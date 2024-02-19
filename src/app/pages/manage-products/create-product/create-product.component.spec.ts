@@ -42,7 +42,6 @@ describe('CreateProductComponent', () => {
     close: jasmine.createSpy('close')
   };
 
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
