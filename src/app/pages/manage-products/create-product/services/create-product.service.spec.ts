@@ -6,7 +6,7 @@ import { StorageService } from '../../../../shared/services/storage/storage.serv
 import { CreateProductApiService } from './create-product-api.service';
 
 class StorageServiceMock {
-  save(key: string, value: any): void {}
+  save(key: any, value: any): void {}
   getLastItem(): any {}
 }
 
@@ -40,17 +40,17 @@ describe('CreateProductService', () => {
   describe('save', () => {
     it('deve salvar o produto no armazenamento', async () => {
       const produto = { id: 1, title: 'Produto A', category: 'eletronic', description: 'Product A', price: 50, image: 'image.png' };
-      const storageServiceSpy = spyOn(storageServiceMock, 'save');
+      const storageServiceSpy = jest.spyOn(storageServiceMock, 'save');
       await service.save(produto);
 
       expect(storageServiceSpy).toHaveBeenCalledWith('1', { key: '1', value: produto });
     });
 
     it('deve gerar um ID e salvar o produto no armazenamento se o ID não for fornecido', async () => {
-      spyOn(storageServiceMock, 'getLastItem').and.returnValue({ value: { id: 1 } });
+      jest.spyOn(storageServiceMock, 'getLastItem').mockReturnValue({ value: { id: 1 } });
 
       const produto = { id: null, title: 'Produto B', category: `woman's clothes`, description: 'Product B', price: 80, image: 'image.png' } as any;
-      const storageServiceSpy = spyOn(storageServiceMock, 'save');
+      const storageServiceSpy = jest.spyOn(storageServiceMock, 'save');
 
       await service.save(produto);
 
@@ -58,10 +58,10 @@ describe('CreateProductService', () => {
     });
 
     it('deve gerar um ID e salvar o produto no armazenamento se o ID não for fornecido e não tiver nenhum produto armazenado', async () => {
-      spyOn(storageServiceMock, 'getLastItem').and.returnValue(null);
+      jest.spyOn(storageServiceMock, 'getLastItem').mockReturnValue(null);
 
       const produto = { id: null, title: 'Produto C', category: `men's clothes`, description: 'Product C', price: 90, image: 'image.png' } as any;
-      const storageServiceSpy = spyOn(storageServiceMock, 'save');
+      const storageServiceSpy = jest.spyOn(storageServiceMock, 'save');
 
       await service.save(produto);
 

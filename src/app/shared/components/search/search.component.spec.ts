@@ -36,7 +36,7 @@ describe('SearchComponent', () => {
   it('deve emitir searchText quando onInputChange é chamado', () => {
     const value = 'iPhone 15';
     const event = { target: { value } } as unknown as Event;
-    const spy = spyOn(component.searchText, 'emit');
+    const spy = jest.spyOn(component.searchText, 'emit');
 
     component.onInputChange(event);
 

@@ -39,7 +39,7 @@ describe('CreateProductComponent', () => {
   let createProductApiService: CreateProductApiService;
 
   const dialogRefMock = {
-    close: jasmine.createSpy('close')
+    close: jest.fn()
   };
 
   beforeEach(waitForAsync(() => {
@@ -107,8 +107,16 @@ describe('CreateProductComponent', () => {
     expect(dialogRefMock.close).toHaveBeenCalled();
   });
 
-  it('deve chamar o método save do createProductService ao enviar o formulário', fakeAsync(() => {
-    spyOn(createProductService, 'save').and.returnValue(Promise.resolve());
+  it('deve chamar o método save do createProductService ao enviar o formulário', () => {
+    jest.spyOn(createProductService, 'save').mockReturnValue(Promise.resolve());
+
+    const mockFileReader = {
+      readAsDataURL: jest.fn(),
+      result: 'data:image/jpeg;base64,MockBase64String',
+      onload: jest.fn()
+    };
+
+    jest.spyOn(window, 'FileReader').mockReturnValue(mockFileReader as any);
 
     const evento = {
       target: {
@@ -117,10 +125,14 @@ describe('CreateProductComponent', () => {
     };
     component.onImageSelected(evento);
 
+    fixture.detectChanges();
+
     component.onSubmitForm();
+
+    mockFileReader.onload();
 
     fixture.whenStable().then(() => {
       expect(createProductService.save).toHaveBeenCalled();
     });
-  }));
+  });
 });

@@ -104,7 +104,7 @@ describe('ProductsService', () => {
 
   describe('delete', () => {
     it('deve remover o produto do armazenamento', () => {
-      spyOn(storageServiceMock, 'remove');
+      jest.spyOn(storageServiceMock, 'remove');
       const initialProductsLength = storageServiceMock.getAll().length;
 
       service.delete(productStorage[0]);

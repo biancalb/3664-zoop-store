@@ -52,7 +52,7 @@ describe('CardComponent', () => {
     expect(productImg.src).toContain(product.image);
     expect(productTitle.textContent).toContain(product.title);
     expect(productDescription.textContent).toContain(product.description);
-    expect(productPrice.textContent).toContain(product.price);
+    expect(productPrice.textContent).toContain(`R$ ${product.price}`);
   });
 
   it('deve emitir o evento onDelete quando onDeleteClick for chamado', () => {
@@ -65,7 +65,7 @@ describe('CardComponent', () => {
       image: 'src/iphone-15.png'
     };
 
-    const spy = spyOn(component.onDelete, 'emit');
+    const spy = jest.spyOn(component.onDelete, 'emit');
 
     component.product = product;
     component.isManagable = true;
@@ -89,7 +89,7 @@ describe('CardComponent', () => {
       image: 'src/samsung-s22.png'
    };
 
-    const spy = spyOn(component.onEdit, 'emit');
+    const spy = jest.spyOn(component.onEdit, 'emit');
     component.product = product;
     component.isManagable = true;
 
